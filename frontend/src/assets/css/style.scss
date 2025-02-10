@@ -178,8 +178,31 @@ footer{
         }
     }
 }
-  
 
+.product-detail{
+    .mySwiper{
+        .swiper-slide{
+            height: auto !important;
+        }
+    }
+    .price{
+        font-weight: bold;
+        .test-decoration-line-through{
+            text-decoration: line-through;
+            color: rgba($primary-black, 0.5);
+        }
+    }
+}
+  
+.nav-tabs{
+    .nav-link{
+        color: $primary-black;
+    } 
+} 
+
+.admin-login{
+    width: 450px;
+}
 @media (min-width: 200px) and (max-width: 768px) {
     .section-1{
         .swiper{
