@@ -8,6 +8,7 @@ import { Checkout } from './components/Checkout'
 import { Login } from './components/admin/Login'
 import { ToastContainer } from 'react-toastify';
 import { Dashboard } from './components/admin/Dashboard'
+import { AdminRequireAuth } from './components/admin/AdminRequireAuth'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,7 +23,11 @@ function App() {
             <Route path="/cart" element={<Cart/>} />
             <Route path="/checkout" element={<Checkout/>} />
             <Route path="/admin/login" element={<Login/>} />
-            <Route path="/admin/dashboard" element={<Dashboard/>} />
+            <Route path="/admin/dashboard" element={
+                <AdminRequireAuth>
+                  <Dashboard/>
+                </AdminRequireAuth>
+            } />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

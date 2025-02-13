@@ -203,6 +203,22 @@ footer{
 .admin-login{
     width: 450px;
 }
+
+.sidebar{
+    ul{
+        li{
+            border-bottom: 1px solid rgba(6, 17, 35, 0.2);
+            a{
+                display: block;
+                padding: 10px 10px;
+                color: $primary-black;
+                &:hover{
+                    color: $primary-color;
+                }
+            }
+        }
+    }
+}
 @media (min-width: 200px) and (max-width: 768px) {
     .section-1{
         .swiper{
