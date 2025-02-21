@@ -15,9 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
+        // User::factory()->create([
+        //     'name' => 'Admin User',
+        //     'email' => 'admin@gmail.com',
+        // ]);
+        $this->call([
+            SizeTableSeeder::class
         ]);
     }
 }

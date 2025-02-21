@@ -9,6 +9,17 @@ import { Login } from './components/admin/Login'
 import { ToastContainer } from 'react-toastify';
 import { Dashboard } from './components/admin/Dashboard'
 import { AdminRequireAuth } from './components/admin/AdminRequireAuth'
+import { default as ShowCategories } from './components/admin/category/Show'
+import { Create as CreateCategory } from './components/admin/category/Create'
+import { Edit  as EditCategory} from './components/admin/category/Edit'
+import { Show as ShowBrands} from './components/admin/brand/Show'
+import { Create as CreateBrand } from './components/admin/brand/Create'
+import { Edit as EditBrand} from './components/admin/brand/Edit'
+
+import { Show as ShowProducts} from './components/admin/product/Show'
+import { Create as CreateProduct} from './components/admin/product/Create'
+import { Edit as EditProduct} from './components/admin/product/Edit'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -26,6 +37,52 @@ function App() {
             <Route path="/admin/dashboard" element={
                 <AdminRequireAuth>
                   <Dashboard/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/categories" element={
+                <AdminRequireAuth>
+                  <ShowCategories/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/categories/create" element={
+                <AdminRequireAuth>
+                  <CreateCategory/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/categories/edit/:id" element={
+                <AdminRequireAuth>
+                  <EditCategory/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/brands" element={
+                <AdminRequireAuth>
+                  <ShowBrands/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/brands/create" element={
+                <AdminRequireAuth>
+                  <CreateBrand/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/brand/:id" element={
+                <AdminRequireAuth>
+                  <EditBrand/>
+                </AdminRequireAuth>
+            } />
+
+            <Route path="/admin/products" element={
+                <AdminRequireAuth>
+                  <ShowProducts/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/product/create" element={
+                <AdminRequireAuth>
+                  <CreateProduct/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/product/:id" element={
+                <AdminRequireAuth>
+                  <EditProduct/>
                 </AdminRequireAuth>
             } />
         </Routes>
