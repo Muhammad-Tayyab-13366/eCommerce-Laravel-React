@@ -80,7 +80,7 @@ function App() {
                   <CreateProduct/>
                 </AdminRequireAuth>
             } />
-            <Route path="/admin/product/:id" element={
+            <Route path="/admin/product/edit/:id" element={
                 <AdminRequireAuth>
                   <EditProduct/>
                 </AdminRequireAuth>
