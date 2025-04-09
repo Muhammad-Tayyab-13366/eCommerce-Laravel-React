@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Layout } from './common/Layout'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Thumbs, FreeMode, Navigation  } from 'swiper/modules';
 import 'swiper/css';
@@ -14,10 +14,66 @@ import ProductImgFour from '../assets/images/mens/nine.jpg';
 import { Rating } from 'react-simple-star-rating'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { apiUrl } from './common/http';
+import { CartContext } from './context/Cart';
+import { toast } from 'react-toastify';
 
 export const Product = () => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [rating, setRating] = useState(4)
+    const [product, setProduct] = useState([]);
+    const [productImages, setProductImages] = useState([]);
+    const [productSizes, setProductSizes] = useState([]);
+    const [sizeSelected, setSizeSelected] = useState(null)
+    const params = useParams();
+
+    const { addToCart } = useContext(CartContext)
+    const getProduct = () => {
+        fetch(`${apiUrl}get-product/${params.id}`,{
+            'method': "GET",
+            "headers" : {
+                'Accept' : 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(res => res.json())
+        .then( result => {
+            if(result.status == 200){
+                setProduct(result.data)
+                setProductImages(result.data.product_images)
+                setProductSizes(result.data.product_sizes)
+               console.log(result)
+
+            }else {
+               // console.log(result)
+            }
+          
+        })
+    }
+
+    const handleAddToCart = () => {
+
+        if(productSizes.length > 0){
+
+            if(sizeSelected == null){
+                toast.error('Please select a size')
+            }
+            else 
+            {
+                addToCart(product, sizeSelected)
+                toast.success('Product successfully added to cart ')
+
+            }
+        }
+        else 
+        {
+            addToCart(product, null)
+        }
+        
+    }
+    useEffect(() => {
+        getProduct();
+    },[])
+
   return (
     <>
         <Layout>
@@ -28,7 +84,7 @@ export const Product = () => {
                             <ol className="breadcrumb m-0">
                                 <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                                 <li className="breadcrumb-item " aria-current="page"><Link to="/shop">Shop</Link></li>
-                                <li className="breadcrumb-item " aria-current="page"><Link to="/shop">Dummy Product Title</Link></li>
+                                <li className="breadcrumb-item " aria-current="page"><Link to="/shop">{product.title}</Link></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,43 +108,25 @@ export const Product = () => {
                                         watchSlidesProgress={true}
                                         modules={[FreeMode, Navigation, Thumbs]}
                                         className="mySwiper mt-2"
-                                    >   
-                                    <SwiperSlide>
-                                        <div className='content'>
-                                            <img 
-                                                src={ProductImgOne} 
-                                                alt="" 
-                                                height={100}
-                                                className='w-100' />
-                                        </div>                                                                      
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className='content'>
-                                            <img 
-                                                src={ProductImgTwo} 
-                                                alt="" 
-                                                height={100}
-                                                className='w-100' />
-                                        </div>                                                                      
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className='content'>
-                                            <img 
-                                                src={ProductImgThree} 
-                                                alt="" 
-                                                height={100}
-                                                className='w-100' />
-                                        </div>                                                                      
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className='content'>
-                                            <img 
-                                                src={ProductImgFour} 
-                                                alt="" 
-                                                height={100}
-                                                className='w-100' />
-                                        </div>                                                                      
-                                    </SwiperSlide>
+                                    >  
+
+                                    {
+                                        productImages && productImages.map(product_image => {
+
+                                            return (
+                                                <SwiperSlide key={`ss-prod-${product.id}`}>
+                                                    <div className='content' >
+                                                        <img 
+                                                            src={product_image.image_url} 
+                                                            alt="" 
+                                                            height={100}
+                                                            className='w-100' />
+                                                    </div>                                                                      
+                                                </SwiperSlide>
+                                            )
+                                        })
+                                    } 
+                                   
                                 </Swiper>
                             </div>
                             <div className="col-10">
@@ -104,46 +142,28 @@ export const Product = () => {
                                     modules={[FreeMode, Navigation, Thumbs]}
                                     className="mySwiper2"
                                 >
-                                    
-                                    <SwiperSlide >
-                                        <div className='content'>
-                                        <img 
-                                            src={ProductImgOne} 
-                                            alt="" 
-                                            className='w-100' />
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide >
-                                        <div className='content'>
-                                        <img 
-                                            src={ProductImgTwo} 
-                                            alt="" 
-                                            className='w-100' />
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide >
-                                        <div className='content'>
-                                        <img 
-                                            src={ProductImgThree} 
-                                            alt="" 
-                                            className='w-100' />
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide >
-                                        <div className='content'>
-                                        <img 
-                                            src={ProductImgFour} 
-                                            alt="" 
-                                            className='w-100' />
-                                        </div>
-                                    </SwiperSlide>           
-                                </Swiper>
+                                    {
+                                        productImages && productImages.map(product_image => {
 
+                                            return (
+                                                <SwiperSlide key={`sl-prod-${product.id}`}>
+                                                    <div className='content'  >
+                                                        <img 
+                                                            src={product_image.image_url} 
+                                                            alt="" 
+                                                           
+                                                            className='w-100' />
+                                                    </div>                                                                      
+                                                </SwiperSlide>
+                                            )
+                                        })
+                                    } 
+                                </Swiper>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-7">
-                        <h2>Dummy Product</h2>
+                        <h2>{product.title}</h2>
                         <div className='d-flex'>
                             <Rating
                                 size={20}
@@ -154,28 +174,46 @@ export const Product = () => {
                             <span className='ps-2'>10 Reviews</span>
                         </div>
                         <div className="price h3 py-3">
-                            $18 <span className='test-decoration-line-through'>$20</span>
+                            ${product.price} &nbsp;
+                            {
+                                product.compare_price && <span className='test-decoration-line-through'>${product.compare_price}</span>
+                            }
                         </div>
                         <div>
-                            100% original product <br/>
-                            Pay on delivery might be available <br/>
-                            Easy 15 days retune and exchnage policy
+                            {product.short_description} 
                         </div>
                         <div className='pt-3'>
                             <strong>Select size</strong>
                             <div className='sizes pt-2'>
-                                <button className="btn btn-size ms-1">S</button>
-                                <button className="btn btn-size ms-1">M</button>
+
+                                { 
+                                    productSizes && productSizes.map(product_size => {
+                                        
+                                        return (
+                                            <button 
+                                                key={`btn-size-${product_size.sizes.id}`} 
+                                                className={`btn btn-size ms-1 ${sizeSelected == product_size.sizes.name ? 'active' : ''}`}
+                                                onClick={ () => setSizeSelected(product_size.sizes.name) }>
+                                                    {product_size.sizes.name}
+                                                </button>
+                                        )
+                                    }) 
+                                }
+                                
+                                {/* <button className="btn btn-size ms-1">M</button>
                                 <button className="btn btn-size ms-1">L</button>
-                                <button className="btn btn-size ms-1">XL</button>
+                                <button className="btn btn-size ms-1">XL</button> */}
                             </div>
                         </div>
                         <div className='add-to-cart mt-4'>
-                            <button className="btn btn-primary text-uppercase">Add to Cart</button>
+                            <button 
+                                className="btn btn-primary text-uppercase"
+                                onClick={handleAddToCart}
+                                >Add to Cart</button>
                         </div>
                         <hr />
                         <div>
-                            <strong>SKU: </strong>DDXX2244
+                            <strong>SKU: </strong>{product.sku}
                         </div>
                         
                     </div>
@@ -183,12 +221,14 @@ export const Product = () => {
                 <div className="row pb-5 pt-5">
                     <div className="col-md-12">
                         <Tabs
-                            defaultActiveKey="profile"
+                            defaultActiveKey="description"
                             id="uncontrolled-tab-example"
                             className="mb-3"
                             >
                             <Tab eventKey="description" title="Description">
-                                Tab content for Description
+                                <div dangerouslySetInnerHTML={{ __html: product.description}}>
+
+                                </div>
                             </Tab>
                             <Tab eventKey="review" title="Reviews (10)">
                                 Review area

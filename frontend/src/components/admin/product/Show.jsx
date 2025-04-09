@@ -5,6 +5,7 @@ import { Sidebar } from '../../common/Sidebar'
 import { adminToken, apiUrl } from '../../common/http'
 import { Nostate } from '../../common/Nostate'
 import { Loader } from '../../common/Loader'
+import { toast } from 'react-toastify'
 
 export const Show = () => {
     const [products, setproducts] = useState([]);
@@ -39,6 +40,39 @@ export const Show = () => {
         });
     };
 
+    const deleteProduct = (id) => {
+
+        if(confirm('Are you sure you want to delete product?'))
+        {
+            fetch(`${apiUrl}mark-product-delete/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${adminToken()}`
+                }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(result => {
+                if(result.status == 200){
+                toast.success(result.message)
+                const newProducts = products.filter ( product => product.id != id)
+                setproducts(newProducts)
+                
+                }else {
+                    console.log('something went wrong')
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+        }
+    }
     useEffect(()=> {
         fetchProducts()
     },[])

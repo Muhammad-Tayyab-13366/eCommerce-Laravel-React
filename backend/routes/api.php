@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\SizeController;
 use App\Http\Controllers\admin\TempImageController;
+use App\Http\Controllers\front\ProductController as FrontProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::post('/admin/login', [AuthController::class, 'authenticate']);
+Route::get('/get-latest-products', [FrontProductController::class, 'getLatestProducts']);
+Route::get('/get-featured-products', [FrontProductController::class, 'getFeaturedProducts']);
+Route::get('/get-categories', [FrontProductController::class, 'getCategories']); 
+Route::get('/get-brands', [FrontProductController::class, 'getBrands']); 
+Route::get('/get-products', [FrontProductController::class, 'getProducts']);  
+Route::get('/get-product/{id}', [FrontProductController::class, 'getProduct']);
 
 Route::group(['middleware' => 'auth:sanctum'], function (){
 
@@ -33,6 +40,8 @@ Route::group(['middleware' => 'auth:sanctum'], function (){
     Route::post('/temp-images', [TempImageController::class, 'store']);
     Route::post('/save-product-image', [ProductController::class, 'saveProductImage']);
     Route::post('/chnage-product-default-image', [ProductController::class, 'updateDefaultImage']);
+    Route::delete('/delete-product-image/{id}', [ProductController::class, 'deleteProductImage']);
+    Route::post('/mark-product-delete/{id}', [ProductController::class, 'markProductDeleted']); 
     Route::get('/sizes', [SizeController::class, 'index']);
 
 });

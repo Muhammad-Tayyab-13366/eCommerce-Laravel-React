@@ -1,10 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Logo from '../../assets/images/logo.png';
 import { Link } from 'react-router-dom';
+import { apiUrl } from './http';
 export const Header = () => {
+
+    const [categories, setCategories] = useState([])
+    const getCategories = () => {
+        fetch(apiUrl+'get-categories',{
+            'method': "GET",
+            "headers" : {
+                'Accept' : 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(res => res.json())
+        .then( result => {
+            if(result.status == 200){
+                setCategories(result.data)
+            }else {
+               // console.log(result)
+            }
+          
+        })
+    }
+
+    useEffect( () => {
+        getCategories()
+    },[])
+
   return (
     <>
         <header className='shadow'>
@@ -21,9 +46,16 @@ export const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
-                    <Nav.Link as={Link} to="/shop">Mens</Nav.Link>
-                    <Nav.Link as={Link} to="/women">Womens</Nav.Link>
-                    <Nav.Link as={Link} to="/kids">Kids</Nav.Link>
+                        {
+                            categories && categories.map( category => {
+                                return (
+                                    <Nav.Link key={`nav-cat-${category.id}`}  as={Link} to={`/shop?category=${category.id}`}>{category.name}</Nav.Link>
+                                )
+                            })
+                        }
+                        {/* <Nav.Link as={Link} to="/shop">Mens</Nav.Link>
+                        <Nav.Link as={Link} to="/women">Womens</Nav.Link>
+                        <Nav.Link as={Link} to="/kids">Kids</Nav.Link> */}
                     </Nav>
                     <div className='nav-right d-flex'>
                     <Link to="" className='ms-3'>

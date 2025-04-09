@@ -21,6 +21,8 @@ export const Create = ({ placeholder }) => {
     const [gallery, setGallary] = useState([]);
     const [galleryImages, setGalleryImages] = useState([]);
     const navigate = useNavigate();
+    const [sizes, setSizes] = useState([]);
+    const [sizesChecked, setSizesChecked] = useState([]);
     // JoditEditor
     const editor = useRef(null);
 	const [content, setContent] = useState('');
@@ -134,9 +136,25 @@ export const Create = ({ placeholder }) => {
 
     }
 
+    const fetchSizes = () => {
+        const res = fetch(`${apiUrl}sizes`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'applicationh/json',
+                'Authorization': `Bearer ${adminToken()}`
+            }
+            
+        }).then(res => res.json())
+        .then(result => {
+            setSizes(result.data);
+        })
+    }
+
     useEffect(() => {
         fetchCategories();
         fetchBrands();
+        fetchSizes();
     }, [])
   return (
     <Layout>
@@ -231,8 +249,8 @@ export const Create = ({ placeholder }) => {
                                     {errors.price && <p className='invalid-feedback'>{ errors.price?.message}</p>}
                                 </div>
                                 <div className="col-md-6">
-                                    <label htmlFor="" className='form-lable'>Discounted Price</label>
-                                    <input type="text" name="compare_price" placeholder="Discounted Price" className='form-control' 
+                                    <label htmlFor="" className='form-lable'>Compare Price</label>
+                                    <input type="text" name="compare_price" placeholder="Compare Price" className='form-control' 
                                     {...register("compare_price")}/>
                                 </div>
                             </div>
@@ -287,6 +305,40 @@ export const Create = ({ placeholder }) => {
                                     </select>
                                     {errors.is_feature && <p className='invalid-feedback'>{ errors.is_feature?.message}</p>}
                                 </div>
+                            </div>
+                            <h3 className='pt-3 border-bottom mb-3'>Sizes</h3>
+                            <div className=" mb-3">
+                                <label htmlFor="" className='form-label pe-2'></label>
+                                {
+                                    sizes && sizes.length > 0 && sizes.map((size, index) => {
+                                        return (
+                                                <div className="form-check-inline ps2" key={`d-size-${index}`}>
+                                                <input {...register("sizes")}
+                                                className="form-check-input" 
+                                                type="checkbox" 
+                                                checked={sizesChecked.includes(size.id)}
+                                                onChange={ (e) => {
+                                                   
+                                                    if(e.target.checked){
+
+                                                        setSizesChecked([...sizesChecked, size.id])
+                                                    }
+                                                    else 
+                                                    {
+                                                        setSizesChecked(sizesChecked.filter(sid => size.id != sid))
+                                                    }
+                                                   
+                                                }}
+                                                value={size.id} 
+                                                id={`size-${size.id}`} />
+                                                <label className="form-check-label ps-2" htmlFor={`size-${size.id}`}>
+                                                    {size.name}
+                                                </label>
+                                            </div>
+                                        )
+                                    })
+                                }
+                                
                             </div>
                             <h3 className='pt-3 border-bottom mb-3'>Image Gallery</h3>
                             <div className="mb-3">

@@ -13,6 +13,7 @@ export const Edit = ({ placeholder }) => {
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [sizes, setSizes] = useState([]);
+    const [sizesChecked, setSizesChecked] = useState([]);
     //const [gallery, setGallary] = useState([]);
     const [productImages, setProductImages] = useState([]);
     //const [galleryImages, setGalleryImages] = useState([]);
@@ -68,7 +69,7 @@ export const Edit = ({ placeholder }) => {
 
                     setContent(result.data.description)
                     setProductImages(result.data.product_images)
-
+                    setSizesChecked(result.productSizes)
                 }else {
                     
                 }
@@ -174,9 +175,32 @@ export const Edit = ({ placeholder }) => {
         })
     }
 
-    const deleteImage = (image) => {
-        const newGalleryImages = galleryImages.filter(gallery => gallery != image)
-        setGalleryImages(newGalleryImages)
+    const deleteImage = (id) => {
+
+        if(confirm('Are you sure you want to delete image?'))
+        {
+            const res = fetch(`${apiUrl}delete-product-image/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'applicationh/json',
+                    'Authorization': `Bearer ${adminToken()}`
+                }
+                // body: formData
+                
+            }).then(res => res.json())
+            .then(result => {
+
+                if(result.status == 200){
+                    toast.success(result.message);
+                    const newProductImages = productImages.filter(productImage => productImage.id != id);
+                    setProductImages(newProductImages);
+                
+                }else {
+                    toast.error(result.message)
+                }
+                
+            })
+        }
 
     }
 
@@ -214,7 +238,6 @@ export const Edit = ({ placeholder }) => {
             
         }).then(res => res.json())
         .then(result => {
-            console.log(result)
             setSizes(result.data);
         })
     }
@@ -316,8 +339,8 @@ export const Edit = ({ placeholder }) => {
                                         {errors.price && <p className='invalid-feedback'>{ errors.price?.message}</p>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label htmlFor="" className='form-lable'>Discounted Price</label>
-                                        <input type="text" name="compare_price" placeholder="Discounted Price" className='form-control' 
+                                        <label htmlFor="" className='form-lable'>Compare Price</label>
+                                        <input type="text" name="compare_price" placeholder="Compare Price" className='form-control' 
                                         {...register("compare_price")}/>
                                     </div>
                                 </div>
@@ -371,14 +394,31 @@ export const Edit = ({ placeholder }) => {
                                         {errors.is_feature && <p className='invalid-feedback'>{ errors.is_feature?.message}</p>}
                                     </div>
                                 </div>
+                                <h3 className='pt-3 border-bottom mb-3'>Sizes</h3>
                                 <div className=" mb-3">
-                                    <label htmlFor="" className='form-label pe-2'>Sizes</label>
+                                    <label htmlFor="" className='form-label pe-2'></label>
                                     {
                                         sizes && sizes.length > 0 && sizes.map((size, index) => {
                                             return (
                                                  <div className="form-check-inline ps2" key={`d-size-${index}`}>
                                                     <input {...register("sizes")}
-                                                    className="form-check-input" type="checkbox" value={size.id} id={`size-${size.id}`} />
+                                                    className="form-check-input" 
+                                                    type="checkbox" 
+                                                    checked={sizesChecked.includes(size.id)}
+                                                    onChange={ (e) => {
+                                                        console.log(size.id)
+                                                        if(e.target.checked){
+
+                                                            setSizesChecked([...sizesChecked, size.id])
+                                                        }
+                                                        else 
+                                                        {
+                                                            setSizesChecked(sizesChecked.filter(sid => size.id != sid))
+                                                        }
+                                                       // console.log(sizesChecked )
+                                                    }}
+                                                    value={size.id} 
+                                                    id={`size-${size.id}`} />
                                                     <label className="form-check-label ps-2" htmlFor={`size-${size.id}`}>
                                                         {size.name}
                                                     </label>
@@ -402,7 +442,7 @@ export const Edit = ({ placeholder }) => {
                                                         <div className="card shadow">
                                                             <img width={200} src={productImage.image_url} alt="" />
                                                         </div>
-                                                        <button type="button" className='btn btn-sm btn-danger w-100 mt-2' onClick={() => {deleteImage(galleryImage)}}>Delete</button>
+                                                        <button type="button" className='btn btn-sm btn-danger w-100 mt-2' onClick={() => {deleteImage(productImage.id)}}>Delete</button>
                                                         <button type="button" className='btn btn-sm btn-secondary w-100 mt-2' onClick={() => {changeDefaultImage(productImage.image)}}>Set as Default</button>
                                                     </div>
                                                 )
