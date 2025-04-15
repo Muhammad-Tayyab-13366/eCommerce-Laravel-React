@@ -84,7 +84,8 @@ export const Checkout = () => {
                                             <span>$10</span>
                                             <button className="btn btn-size ms-1">S</button>
                                         </div>
-                                        <div className='ps-5'> x1</div>
+
+                                        <div className='ps-5'> x2</div>
                                     </div>
                                 </td>
                             </tr>
