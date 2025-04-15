@@ -60,13 +60,14 @@ export const Product = () => {
             else 
             {
                 addToCart(product, sizeSelected)
-                toast.success('Product successfully added to cart ')
+                toast.success('Product successfully added to cart')
 
             }
         }
         else 
         {
             addToCart(product, null)
+            toast.success('Product successfully added to cart')
         }
         
     }
