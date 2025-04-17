@@ -20,7 +20,7 @@ export const Profile = () => {
             <div className="col-md-9">
               <div className="card shadow">
                 <div className="card-body">
-                    
+                    <h1>h1</h1>
                 </div>
               </div>
               
