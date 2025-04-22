@@ -16,7 +16,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-
+       
         if($validator->passes()){
             if(Auth::attempt(["email" => $request->email, 'password' => $request->password])){
                 $user = User::find(Auth::user()->id);

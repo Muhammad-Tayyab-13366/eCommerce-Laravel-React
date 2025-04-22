@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +72,30 @@ class AccountController extends Controller
                 "errors" => $validator->errors()
             ]);
         }
+
+    }
+
+    public function getOrderDetail($id, Request $request)
+    {
+        $order = Order::where(["user_id" => $request->user()->id, 'id' => $id])
+                    ->with('orderItems')->first();
+
+        if($order == null)
+        {
+            return response()->json([
+                "status" => 404, // not found
+                "message" => "Order not found",
+                'data' => []
+            ], 404);
+        }
+        else 
+        {
+            return response()->json([
+                "status" => 200,
+                'data' => $order
+            ]);
+        }
+                    
 
     }
 }

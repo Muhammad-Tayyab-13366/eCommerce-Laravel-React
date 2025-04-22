@@ -11,7 +11,6 @@ class OrderController extends Controller
 {
     //
     public function saveOrder(Request $request){
-        
         if(!empty($request->cart)){
             $order = new Order();
             $order->name = $request->name;
@@ -38,14 +37,15 @@ class OrderController extends Controller
                 $orderItem->qty = $item['qty'];
                 $orderItem->product_id = $item['product_id'];
                 $orderItem->size = $item['size'];
-                $orderItem->name = $item['name'];
+                $orderItem->name = $item['title'];
                 $orderItem->order_id = $order->id;
                 $orderItem->save();
             }
 
             return response()->json([
                 "status" => 200,
-                "message" => "Order placed successfully"
+                "message" => "Order placed successfully",
+                "order_id" => $orderItem->order_id
             ]);
         }
         else{

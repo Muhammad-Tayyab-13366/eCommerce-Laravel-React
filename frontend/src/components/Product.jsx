@@ -115,7 +115,7 @@ export const Product = () => {
                                         productImages && productImages.map(product_image => {
 
                                             return (
-                                                <SwiperSlide key={`ss-prod-${product.id}`}>
+                                                <SwiperSlide key={`ss-prod-${product_image.image_url}`}>
                                                     <div className='content' >
                                                         <img 
                                                             src={product_image.image_url} 
@@ -147,7 +147,7 @@ export const Product = () => {
                                         productImages && productImages.map(product_image => {
 
                                             return (
-                                                <SwiperSlide key={`sl-prod-${product.id}`}>
+                                                <SwiperSlide key={`sl-prod--${product_image.image_url}`}>
                                                     <div className='content'  >
                                                         <img 
                                                             src={product_image.image_url} 
