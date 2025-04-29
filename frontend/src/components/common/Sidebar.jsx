@@ -14,7 +14,7 @@ export const Sidebar = () => {
                 <li><Link to="/admin/brands">Brands</Link></li>
 
                 <li><Link to="/admin/products">Products</Link></li>
-                <li><a href="">Orders</a></li>
+                <li><Link to="/admin/orders">Orders</Link></li>
                 <li><a href="">Users</a></li>
                 <li><a href="">Shipping</a></li>
                 <li><a href="">Change Password</a></li>

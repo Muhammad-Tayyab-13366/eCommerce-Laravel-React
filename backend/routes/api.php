@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\OrderController as AdminOrderController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\SizeController;
 use App\Http\Controllers\admin\TempImageController;
@@ -29,7 +30,9 @@ Route::post('/login', [AccountController::class, 'authenticate']);
 Route::group(['middleware' => ['auth:sanctum', 'checkUserRole']], function (){
 
     Route::post("/save-order", [OrderController::class, 'saveOrder']);
+    Route::get("/get-orders", [OrderController::class, 'getOrders']);
     Route::get('/get-order-detail/{id}', [AccountController::class, 'getOrderDetail']);
+    Route::get('/order-detail/{id}', [OrderController::class, 'orderDetail']);
 });
 
 
@@ -54,5 +57,9 @@ Route::group(['middleware' => ['auth:sanctum', 'checkAdminRole']], function (){
     Route::delete('/delete-product-image/{id}', [ProductController::class, 'deleteProductImage']);
     Route::post('/mark-product-delete/{id}', [ProductController::class, 'markProductDeleted']); 
     Route::get('/sizes', [SizeController::class, 'index']);
+
+    Route::get('/orders', [AdminOrderController::class, 'index']);
+    Route::get('/order/{id}', [AdminOrderController::class, 'orderDetail']);
+    Route::post('/update-order/{id}', [AdminOrderController::class, 'updateOrder']);
 
 });

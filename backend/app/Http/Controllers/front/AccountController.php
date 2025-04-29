@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendWelcomEmail;
+use App\Mail\WelcomeEmail;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
@@ -35,6 +38,8 @@ class AccountController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
+
+        SendWelcomEmail::dispatch($user);
 
         return response()->json([
             "status" => 200,

@@ -37,7 +37,7 @@ export const Header = () => {
     <>
         <header className='shadow'>
             <div className='bg-dark text-center py-2'>
-            <span className='text-white'>Your fasion partner</span>
+            <span className='text-white'>Your fashion partner</span>
             </div>
             <div className='container'>
             <Navbar expand="lg" className="">

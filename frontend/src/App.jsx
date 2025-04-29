@@ -24,6 +24,10 @@ import { Login as AccountLogin} from './components/Login'
 import { Profile } from './components/Profile'
 import { RequireAuth } from './components/RequireAuth'
 import { Confirmation } from './components/Confirmation'
+import { ShowOrders } from './components/admin/orders/ShowOrders'
+import { OrderDetail } from './components/admin/orders/OrderDetail'
+import { Orders } from './components/front/Orders'
+import { OrderDetail as UserOrderDetail } from './components/front/OrderDetail'
 
 
 function App() {
@@ -46,6 +50,18 @@ function App() {
             <Route path="/order/confirmation/:id" element={
               <RequireAuth>
                 <Confirmation/>
+              </RequireAuth>
+            }/>
+
+            <Route path="/account/orders" element={
+              <RequireAuth>
+                <Orders/>
+              </RequireAuth>
+            }/>
+
+            <Route path="/account/order/:id" element={
+              <RequireAuth>
+                <UserOrderDetail/>
               </RequireAuth>
             }/>
 
@@ -108,6 +124,16 @@ function App() {
             <Route path="/admin/product/edit/:id" element={
                 <AdminRequireAuth>
                   <EditProduct/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/orders" element={
+                <AdminRequireAuth>
+                  <ShowOrders/>
+                </AdminRequireAuth>
+            } />
+            <Route path="/admin/order/:id" element={
+                <AdminRequireAuth>
+                  <OrderDetail/>
                 </AdminRequireAuth>
             } />
         </Routes>

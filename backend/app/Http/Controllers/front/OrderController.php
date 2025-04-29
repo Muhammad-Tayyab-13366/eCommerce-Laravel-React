@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderEmail;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -41,12 +43,14 @@ class OrderController extends Controller
                 $orderItem->order_id = $order->id;
                 $orderItem->save();
             }
-
+            SendOrderEmail::dispatch($order->id);
             return response()->json([
                 "status" => 200,
                 "message" => "Order placed successfully",
                 "order_id" => $orderItem->order_id
             ]);
+
+           
         }
         else{
 
@@ -56,5 +60,31 @@ class OrderController extends Controller
             ]);
         }
         
+    }
+
+    public function getOrders()
+    {
+        $orders = Order::where("user_id", Auth::user()->id)->orderBy("created_at", "DESC")->get();
+        return response()->json([
+            "status" => 200,
+            "data" => $orders
+        ]);
+    }
+
+    public function orderDetail($id){
+        $order = Order::where('id', $id)->with( 'orderItems.product')->first();
+        
+        if(empty($order)){
+            return response()->json([
+                "status" => 404, // not found
+                "message" => "Order not found",
+                "data" => []
+            ]);
+        }
+
+        return response()->json([
+            "status" => 200,
+            "data" => $order
+        ]);
     }
 }

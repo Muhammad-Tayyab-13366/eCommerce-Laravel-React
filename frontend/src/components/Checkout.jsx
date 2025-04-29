@@ -19,7 +19,7 @@ export const Checkout = () => {
     const processOrder = (data) => {
         console.log(data)
         if(paymentMethod == "cod"){
-            saveOrder(data, 'unpiad')
+            saveOrder(data, 'unpaid')
         }
     }
 
@@ -35,7 +35,7 @@ export const Checkout = () => {
             cart: cartData
         }
 
-        console.log(newFormData)
+        
         fetch(`${apiUrl}save-order`, {
             method: 'POST',
             headers: {
@@ -50,6 +50,7 @@ export const Checkout = () => {
 
             if(result.status == 200){
                 localStorage.removeItem('cart');
+                
                 navigate(`/order/confirmation/${result.order_id}`)
             }else {
                 toast.error(result.message)
@@ -129,7 +130,7 @@ export const Checkout = () => {
                                 <div className='mb-3'>
                                     <input type="text" name="" id="" placeholder='State'
                                     className={`form-control ${errors.state && 'is-invalid'}`} 
-                                    {...register("state", {  required: "Sate is required" }) }
+                                    {...register("state", {  required: "State is required" }) }
                                      />
                                      {errors.state && <p className='invalid-feedback'>{ errors.state?.message}</p>}
                                 </div>
